@@ -1,16 +1,7 @@
 ﻿using System;
 
-public class Class1
+public class LastSeenUtility
 {
-    public static void Main()
-    {
-        Class1 x = new Class1();
-        Console.WriteLine(DateTime.Now);
-        Console.WriteLine(x.ShowLastSeen(new DateTime(2020, 4, 20, 23, 2, 1, 31)));
-        Console.WriteLine(new DateTime(2020, 4, 20, 23, 2, 1, 31));
-        Console.ReadKey();
-    }
-
     public string ShowLastSeen(DateTime ls)
     {
         string lastseen;
@@ -19,40 +10,14 @@ public class Class1
         int diffinM = DifferenceInMonths(ls, current);
         int diffinD = DifferenceInDays(ls, current);
         int diffinH = DifferenceInHours(ls, current);
-        if (diffinY > 0)
-        {
-            lastseen = diffinY.ToString() + "years";
-            return "Last seen " + lastseen;
-        }
-        else
-        {
-            if (diffinM > 0)
-            {
-                lastseen = CountMonths(ls, current).ToString() + "months";
-                return "Last seen " + lastseen;
-            }
-            else
-            {
-                if (diffinD > 0)
-                {
-                    lastseen = CountDays(ls, current).ToString() + "days";
-                    return "Last seen " + lastseen;
-                }
-                else
-                {
-                    if (diffinH>0)
-                    {
-                        lastseen = CountHours(ls, current).ToString() + "hours";
-                        return "Last seen " + lastseen;
-                    }
-                    else
-                    {
-                        lastseen = CountMinutes(ls,current).ToString() + "minutes";
-                        return "Last seen " + lastseen;
-                    }
-                }
-            }
-        }
+        int diffinMin = CountMinutes(ls,current);
+        if (current.CompareTo(ls) < 0) return "The provided last seen DateTime is later than the current DateTime";
+        lastseen = (diffinY > 0) ? diffinY.ToString() + " years" : "";                   
+        lastseen = (String.IsNullOrEmpty(lastseen) && (diffinM > 0)) ? diffinM.ToString() + " months" :lastseen+"" ;
+        lastseen = (String.IsNullOrEmpty(lastseen) && (diffinD > 0)) ? diffinD.ToString() + " Days" :lastseen+"" ;
+        lastseen = (String.IsNullOrEmpty(lastseen) && (diffinH > 0)) ? diffinH.ToString() + " hours" :lastseen+"" ;
+        lastseen = (String.IsNullOrEmpty(lastseen) && (diffinMin > 0)) ? diffinMin.ToString() + " minutes" : lastseen + "";
+        return "Last Seen "+ lastseen;
     }
     public int DifferenceInYears(DateTime start, DateTime end)
     {
@@ -80,7 +45,7 @@ public class Class1
     public int CountMonths(DateTime start, DateTime end)
     {
         if (start.Year != end.Year)
-            return (12 - start.Month) + end.Month - 1;
+            return (12 - start.Month) + end.Month;
         else
             return end.Month - start.Month;
     }
